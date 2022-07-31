@@ -8,23 +8,55 @@ const GITHUB_URL = process.env.REACT_APP_GITHUB_URL;
 export const GithubProvider = ({ children }) => {
   const initialState = {
     users: [],
-    loading: true,
+    loading: false,
   };
 
   const ACTION = {
     GET_USERS: 'get_users',
+    ACTIVATE_LOADING: 'set_loading',
+    CLEAR_USERS: 'clear_users',
   };
 
   const [state, dispatch] = useReducer(GithubReducer, initialState);
 
-  const fetchUsers = async () => {
-    const response = await fetch(`${GITHUB_URL}/users`);
-    const data = await response.json();
+  //function to activate loading (cause it would be called many times)
+  const setLoading = () =>
+    dispatch({
+      type: ACTION.ACTIVATE_LOADING,
+    });
+
+  // was used for testing purposed at the beginning
+  // const fetchUsers = async () => {
+  //   setLoading();
+  //   const response = await fetch(`${GITHUB_URL}/users`);
+  //   const data = await response.json();
+  //   dispatch({
+  //     type: ACTION.GET_USERS,
+  //     payload: data,
+  //   });
+  //   // reason why we dont have two dispatches is cause action.GET_USERS activates the two states in the reducer
+  // };
+
+  // Get search Results
+  const searchUsers = async (text) => {
+    const params = new URLSearchParams({
+      q: text,
+    });
+    setLoading();
+    const response = await fetch(`${GITHUB_URL}/search/users?${params}`);
+    const { items } = await response.json(); //we destructured from the data returned
     dispatch({
       type: ACTION.GET_USERS,
-      payload: data,
+      payload: items,
     });
-    // reason why we dont have two dispatches is cause action.GET_USERS activates the two states in the reducer
+  };
+
+  //Clear users from State
+  const clearUsers = () => {
+    dispatch({
+      type: ACTION.CLEAR_USERS,
+      payload: [],
+    });
   };
 
   return (
@@ -32,7 +64,8 @@ export const GithubProvider = ({ children }) => {
       value={{
         users: state.users,
         loading: state.loading,
-        fetchUsers,
+        searchUsers,
+        clearUsers,
       }}
     >
       {children}

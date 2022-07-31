@@ -8,9 +8,9 @@ function Navbar({ title }) {
       <div className='container mx-auto'>
         <div className='flex-none px-2 mx-2'>
           <FaGithub className='inline pr-2 text-3xl' />
-          <Link to='/' className='text-lg font-bold align-middle'>
+          <a href='/' className='text-lg font-bold align-middle'>
             {title}
-          </Link>
+          </a>
         </div>
 
         <div className='flex-1 px-2 mx-2'>
@@ -35,5 +35,7 @@ Navbar.defaultProps = {
 Navbar.propTypes = {
   title: PropTypes.string,
 };
+
+//used an a tag for the title because i dont want to save the state when title is clicked
 
 export default Navbar;
