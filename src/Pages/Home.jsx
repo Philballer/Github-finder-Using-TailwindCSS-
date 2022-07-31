@@ -1,8 +1,9 @@
+import UserResults from '../Components/Users/UserList/UserResults';
+
 function Home() {
   return (
     <div>
-      <h1>Home here</h1>
-      {process.env.REACT_APP_GITHUB_TOKEN}
+      <UserResults />
     </div>
   );
 }
