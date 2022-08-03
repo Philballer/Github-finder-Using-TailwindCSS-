@@ -15,7 +15,7 @@ function SingleUser({ user: { login, avatar_url } }) {
         <div>
           <h2 className='card-title'>{login}</h2>
           <Link
-            to={`/users/${login}`}
+            to={`/user/${login}`}
             //because we want the link to be dynamic we use Backticks
             className='text-base-content text-opacity-40'
           >

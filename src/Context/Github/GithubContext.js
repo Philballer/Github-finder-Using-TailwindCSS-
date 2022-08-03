@@ -3,16 +3,18 @@ import GithubReducer from './GithubReducer';
 
 const GithubContext = createContext();
 
-const GITHUB_URL = process.env.REACT_APP_GITHUB_URL;
-
 export const GithubProvider = ({ children }) => {
+  const GITHUB_URL = process.env.REACT_APP_GITHUB_URL;
+
   const initialState = {
     users: [],
+    user: {},
     loading: false,
   };
 
   const ACTION = {
     GET_USERS: 'get_users',
+    GET_SING_USER: 'get_sing_users',
     ACTIVATE_LOADING: 'set_loading',
     CLEAR_USERS: 'clear_users',
   };
@@ -51,6 +53,22 @@ export const GithubProvider = ({ children }) => {
     });
   };
 
+  // Get single user
+  const getUser = async (login) => {
+    setLoading();
+    const response = await fetch(`${GITHUB_URL}/users/${login}`);
+    if (response.status === 404) {
+      window.location = '/notfound'; //doesnt matter what i put here, notfound helps clients to see
+      //if there is an error in URL
+    } else {
+      const data = await response.json();
+      dispatch({
+        type: ACTION.GET_SING_USER,
+        payload: data,
+      });
+    }
+  };
+
   //Clear users from State
   const clearUsers = () => {
     dispatch({
@@ -63,9 +81,11 @@ export const GithubProvider = ({ children }) => {
     <GithubContext.Provider
       value={{
         users: state.users,
+        user: state.user,
         loading: state.loading,
         searchUsers,
         clearUsers,
+        getUser,
       }}
     >
       {children}
