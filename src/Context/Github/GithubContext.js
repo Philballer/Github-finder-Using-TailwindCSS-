@@ -9,6 +9,7 @@ export const GithubProvider = ({ children }) => {
   const initialState = {
     users: [],
     user: {},
+    repos: [],
     loading: false,
   };
 
@@ -17,6 +18,7 @@ export const GithubProvider = ({ children }) => {
     GET_SING_USER: 'get_sing_users',
     ACTIVATE_LOADING: 'set_loading',
     CLEAR_USERS: 'clear_users',
+    GET_REPOS: 'get_repos',
   };
 
   const [state, dispatch] = useReducer(GithubReducer, initialState);
@@ -52,6 +54,16 @@ export const GithubProvider = ({ children }) => {
       payload: items,
     });
   };
+  // Get Repos
+  const getUserRepos = async (login) => {
+    setLoading();
+    const response = await fetch(`${GITHUB_URL}/users/${login}/repos`);
+    const data = await response.json(); //we destructured from the data returned
+    dispatch({
+      type: ACTION.GET_REPOS,
+      payload: data,
+    });
+  };
 
   // Get single user
   const getUser = async (login) => {
@@ -82,10 +94,12 @@ export const GithubProvider = ({ children }) => {
       value={{
         users: state.users,
         user: state.user,
+        repos: state.repos,
         loading: state.loading,
         searchUsers,
         clearUsers,
         getUser,
+        getUserRepos,
       }}
     >
       {children}
