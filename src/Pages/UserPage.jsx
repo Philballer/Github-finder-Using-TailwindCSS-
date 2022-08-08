@@ -31,7 +31,7 @@ function UserPage() {
     followers,
     following,
     public_repos,
-    repos_url,
+    //repos_url,
     public_gitsts,
     hireable,
   } = user;
@@ -130,7 +130,13 @@ function UserPage() {
             </div>
             <div className='stat-title pr-5'>Followers</div>
             <div className='stat-value pr-5 text-3xl md:text-4xl'>
-              {followers}
+              <a
+                href={`https://github.com/${login}?tab=followers`}
+                target='_blank'
+                rel='noreferrer'
+              >
+                {followers}
+              </a>
             </div>
           </div>
           <div className='stat'>
@@ -139,7 +145,13 @@ function UserPage() {
             </div>
             <div className='stat-title pr-5'>Following</div>
             <div className='stat-value pr-5 text-3xl md:text-4xl'>
-              {following}
+              <a
+                href={`https://github.com/${login}?tab=following`}
+                target='_blank'
+                rel='noreferrer'
+              >
+                {following}
+              </a>
             </div>
           </div>
           <div className='stat'>
@@ -168,7 +180,7 @@ function UserPage() {
           </div>
         </div>
 
-        <RepoList />
+        <RepoList repos={repos} />
       </div>
     </div>
   );

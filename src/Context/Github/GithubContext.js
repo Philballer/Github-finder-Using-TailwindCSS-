@@ -56,8 +56,15 @@ export const GithubProvider = ({ children }) => {
   };
   // Get Repos
   const getUserRepos = async (login) => {
+    //to sort repos to how they are created and first 10 per page
+    const params = new URLSearchParams({
+      sort: 'created',
+      per_page: 10,
+    });
     setLoading();
-    const response = await fetch(`${GITHUB_URL}/users/${login}/repos`);
+    const response = await fetch(
+      `${GITHUB_URL}/users/${login}/repos?${params}`
+    );
     const data = await response.json(); //we destructured from the data returned
     dispatch({
       type: ACTION.GET_REPOS,
