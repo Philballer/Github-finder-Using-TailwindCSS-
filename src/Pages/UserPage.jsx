@@ -4,7 +4,7 @@ import { useParams, Link } from 'react-router-dom';
 import Spinner from '../Components/Layout/Spinner/Spinner';
 import GithubContext from '../Context/Github/GithubContext';
 import RepoList from '../Components/Users/Repos/RepoLists/RepoList';
-import { getUser, getUserRepos } from '../Context/Github/GithubActions';
+import { getUserAndRepos } from '../Context/Github/GithubActions';
 
 function UserPage() {
   const { user, repos, loading, dispatch } = useContext(GithubContext);
@@ -15,10 +15,8 @@ function UserPage() {
   useEffect(() => {
     dispatch({ type: 'set_loading' });
     const getUserData = async () => {
-      const userData = await getUser(params.login);
-      dispatch({ type: 'get_sing_users', payload: userData });
-      const userRepoData = await getUserRepos(params.login);
-      dispatch({ type: 'get_repos', payload: userRepoData });
+      const userData = await getUserAndRepos(params.login);
+      dispatch({ type: 'get_user_and_repos', payload: userData });
     };
 
     getUserData();
@@ -61,7 +59,7 @@ function UserPage() {
                 <img src={avatar_url} alt='Profile' />
               </figure>
               <div className='card-body justify-end'>
-                <h3 className='card-title mb-0'>{name}</h3>
+                <h3 className='card-title mb-0 text-1xl'>{name}</h3>
                 <p>{login}</p>
               </div>
             </div>

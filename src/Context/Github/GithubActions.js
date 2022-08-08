@@ -19,34 +19,17 @@ export const searchUsers = async (text) => {
   }
 };
 
-// Get Repos
-export const getUserRepos = async (login) => {
-  //to sort repos to how they are created and first 10 per page
-  const params = new URLSearchParams({
-    sort: 'created',
-    per_page: 10,
-  });
+export const getUserAndRepos = async (login) => {
+  const [user, repos] = await Promise.all([
+    github.get(`/users/${login}`),
+    github.get(`/users/${login}/repos`),
+  ]);
 
-  const response = await fetch(`${GITHUB_URL}/users/${login}/repos?${params}`);
-  const data = await response.json(); //we destructured from the data returned
-  return data;
-};
-
-// Get single user
-export const getUser = async (login) => {
-  const response = await fetch(`${GITHUB_URL}/users/${login}`);
-  if (response.status === 404) {
-    window.location = '/notfound'; //doesnt matter what i put here, notfound helps clients to see
-    //if there is an error in URL
-  } else {
-    const data = await response.json();
-    return data;
-  }
+  return { user: user.data, repos: repos.data };
 };
 
 // was used for testing purposed at the beginning
 // const fetchUsers = async () => {
-//   setLoading();
 //   const response = await fetch(`${GITHUB_URL}/users`);
 //   const data = await response.json();
 //   dispatch({
