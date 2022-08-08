@@ -1,22 +1,28 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { FaCodepen, FaStore, FaUserFriends, FaUsers } from 'react-icons/fa';
 import { useContext, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Spinner from '../Components/Layout/Spinner/Spinner';
 import GithubContext from '../Context/Github/GithubContext';
 import RepoList from '../Components/Users/Repos/RepoLists/RepoList';
+import { getUser, getUserRepos } from '../Context/Github/GithubActions';
 
 function UserPage() {
-  const { user, getUser, getUserRepos, repos, loading } =
-    useContext(GithubContext);
+  const { user, repos, loading, dispatch } = useContext(GithubContext);
 
   const params = useParams();
   // this is used to match params in the api, with the help of useParams hook
 
   useEffect(() => {
-    getUser(params.login);
-    getUserRepos(params.login);
-  }, []);
+    dispatch({ type: 'set_loading' });
+    const getUserData = async () => {
+      const userData = await getUser(params.login);
+      dispatch({ type: 'get_sing_users', payload: userData });
+      const userRepoData = await getUserRepos(params.login);
+      dispatch({ type: 'get_repos', payload: userRepoData });
+    };
+
+    getUserData();
+  }, [dispatch, params.login]);
 
   const {
     name,

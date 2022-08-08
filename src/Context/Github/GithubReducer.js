@@ -20,6 +20,24 @@ const GithubReducer = (state, action) => {
         loading: true,
       };
     }
+    case 'stop_loading': {
+      return {
+        ...state,
+        loading: false,
+      };
+    }
+    case 'set_user_notfound': {
+      return {
+        ...state,
+        userFound: false,
+      };
+    }
+    case 'set_user_found': {
+      return {
+        ...state,
+        userFound: true,
+      };
+    }
     case 'get_repos': {
       return {
         ...state,
@@ -30,8 +48,8 @@ const GithubReducer = (state, action) => {
     case 'clear_users': {
       return {
         ...state,
-        users: action.payload,
-        // we can also just define users as an empty array here instead of defining it with payload in context
+        users: [],
+        // we just defined users as an empty array here instead of defining it with payload in context
       };
     }
 
